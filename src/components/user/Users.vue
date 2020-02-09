@@ -114,12 +114,18 @@
         <el-button type="primary" @click="editUser">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="分配角色" :visible.sync="assighVisble" width="50%">
+    <el-dialog title="分配角色" :visible.sync="assighVisble" @close="setRoleClose" width="50%">
       <div>姓名：{{userInfo.username}}</div>
       <div>角色：{{userInfo.role_name}}</div>
+      <div>
+          分配新角色：
+          <el-select v-model="selectValue" placeholder="请选择">
+            <el-option v-for="item in assighUser" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
+          </el-select>    
+    </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="assighVisble=false">取 消</el-button>
-        <el-button type="primary" @click="assighVisble=false">确 定</el-button>
+        <el-button type="primary" @click="setUserRole">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -164,6 +170,7 @@ export default {
       assighVisble: false,
       userInfo: {},
       assighUser: [],
+      selectValue:'',
       addForm: {
         username: "",
         password: "",
@@ -309,14 +316,45 @@ export default {
           });
         });
     },
-    // 显示分配角色对话框
-   async showAssighDiglog(userInfo) {
-      // console.log(1);
-      this.userInfo = userInfo;
-      const {data:res} = await $http.get('roles')
+    async getRolesList(){
+      const {data:res} = await this.$http.get('roles')
       if(res.meta.status!==200) return this.$message.error('获取用户列表失败')
+      this.assighUser = res.data
+    },
+    // 显示分配角色对话框
+    showAssighDiglog(row) {
+      // console.log(1);
+      this.userInfo = row;
+      
       this.assighVisble = true;
+      this.getRolesList()
+    },
+    // async saveRoleInfo(){
+    //   if(!this.selectedRoleId)return this.$message.error('请选择要分配的角色')
+    //   const {data:res} = await this.$http.put(`users/${this.userInfo.id}/role`,{rid:this.selectedRoleId})
+    //   if(res.meta.status != 200)return this.$message.error('更新角色失败')
+    //   this.$message.success('更新角色成功')
+    //   this.getUserList()
+    //   this.setRoleDialogVisible = false 
+    // }
+        // 分配用户角色
+    async setUserRole() {
+      if(this.selectValue === '') return this.$message.error('亲，请选择角色哦')
+      const { data: res } = await this.$http.put(`users/${this.userInfo.id}/role`,{
+        rid: this.selectValue
+      })
+      console.log(res)
+      if(res.meta.status !== 200) return this.$message.error('分配失败')
+      this.$message.success('分配成功')
+      this.assighVisble = false
+      this.getUserList()
+    },
+
+    // 关闭分配角色对话框
+    setRoleClose() {
+      this.selectValue = ''
     }
+
   }
 };
 </script>
