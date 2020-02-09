@@ -51,7 +51,12 @@
             ></el-button>
             <!-- 分配角色按钮 -->
             <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button
+                type="warning"
+                icon="el-icon-setting"
+                size="mini"
+                @click="showAssighDiglog(scope.row)"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -109,6 +114,14 @@
         <el-button type="primary" @click="editUser">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="分配角色" :visible.sync="assighVisble" width="50%">
+      <div>姓名：{{userInfo.username}}</div>
+      <div>角色：{{userInfo.role_name}}</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="assighVisble=false">取 消</el-button>
+        <el-button type="primary" @click="assighVisble=false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -148,7 +161,9 @@ export default {
       total: 0,
       addDialogVisible: false,
       editDialogVisble: false,
+      assighVisble: false,
       userInfo: {},
+      assighUser: [],
       addForm: {
         username: "",
         password: "",
@@ -211,11 +226,11 @@ export default {
     },
     // 修改用户状态
     async switchChange(val) {
-      console.log(val);
+      // console.log(val);
       const { data: res } = await this.$http.put(
         `users/${val.id}/state/${val.mg_state}`
       );
-      console.log({ data: res });
+      // console.log({ data: res });
       if (res.meta.status !== 200) return this.$message.error("修改失败");
       this.$message.success("修改成功");
     },
@@ -242,6 +257,7 @@ export default {
         this.getUserList();
       });
     },
+    // 显示编辑对话框
     async showEditDiglog(id) {
       // console.log(id);
       const { data: res } = await this.$http(`users/${id.id}`);
@@ -250,9 +266,11 @@ export default {
       this.userInfo = res.data;
       this.editDialogVisble = true;
     },
+    // 关闭对话框
     closeEditDoglog() {
       this.$refs.editRuleFormRef.resetFields();
     },
+    // 编辑用户
     editUser() {
       this.$refs.editRuleFormRef.validate(async flag => {
         if (!flag) return this.$message.error("请完善表格");
@@ -266,28 +284,38 @@ export default {
         this.$message.success("更新成功");
       });
     },
-   removeUser(id){
-    //  console.log(this.$confirm);
-     
-     this.$confirm('此操作将永久删除该用户，是否继续?', '提示', {
-       confirmButtonText: '确定',
-       cancelButtonText: '取消',
-       type: 'warning'
-     }).then(async () => {
-       const {data:res}=await this.$http.delete('users/'+id)
-       if(res.meta.status!==200) return this.$message.error('删除失败')
-       this.$message({
-         type:'success',
-         message:'删除成功'
-       })
-        this.getUserList()
-     }).catch(() => {
-       this.$message({
-         type:'info',
-         message:'已取消'
-       })
-     });
-   
+    // 移除用户
+    removeUser(id) {
+      //  console.log(this.$confirm);
+
+      this.$confirm("此操作将永久删除该用户，是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const { data: res } = await this.$http.delete("users/" + id);
+          if (res.meta.status !== 200) return this.$message.error("删除失败");
+          this.$message({
+            type: "success",
+            message: "删除成功"
+          });
+          this.getUserList();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    },
+    // 显示分配角色对话框
+   async showAssighDiglog(userInfo) {
+      // console.log(1);
+      this.userInfo = userInfo;
+      const {data:res} = await $http.get('roles')
+      if(res.meta.status!==200) return this.$message.error('获取用户列表失败')
+      this.assighVisble = true;
     }
   }
 };

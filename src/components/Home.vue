@@ -38,9 +38,11 @@
         </el-menu>
       </el-aside>
       <!-- 右侧内容主体 -->
-      <el-main>
+        <el-main>
         <!-- 路由占位符 -->
-        <router-view></router-view>
+        <transition>
+          <router-view></router-view>
+        </transition>
       </el-main>
     </el-container>
   </el-container>
@@ -79,7 +81,7 @@ export default {
       const { data: res } = await this.$http.get('menus')
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.menulist = res.data
-      console.log(res)
+      // console.log(res)
     },
     // 点击按钮，切换菜单的折叠与展开
     toggleCollapse() {
@@ -138,5 +140,16 @@ export default {
   text-align: center;
   letter-spacing: 0.2em;
   cursor: pointer;
+}
+.v-enter {
+  transform: translateX(50px);
+  opacity: 0;
+}
+.v-enter-active{
+  transition: all 1s;
+}
+.v-enter-to {
+  transform: translateX(0);
+  opacity: 1;
 }
 </style>
