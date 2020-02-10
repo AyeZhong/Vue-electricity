@@ -29,3 +29,6 @@ body,
   height: 400px;
   overflow-y: scroll;
 }
+.el-cascader-menu{
+  height: 240px;
+}
