@@ -78,7 +78,7 @@
             >添加参数</el-button>
             <el-table :data="onlyParams" border>
               <el-table-column type="expand">
-                 <template slot-scope="scope">
+                <template slot-scope="scope">
                   <el-tag
                     v-for="(item,index) in scope.row.attr_vals"
                     :key="index"
@@ -215,7 +215,12 @@ export default {
       // console.log(this.GoodCateList);
     },
     async getParams() {
-      if (this.cascaderValue.length !== 3) return (this.cascaderValue = [],this.onlyParams=[],this.manyParams=[]);
+      if (this.cascaderValue.length !== 3)
+        return (
+          (this.cascaderValue = []),
+          (this.onlyParams = []),
+          (this.manyParams = [])
+        );
       // console.log(this.onlyParams,this.manyParams);
       const { data: res } = await this.$http.get(
         `categories/${this.cateId}/attributes`,
@@ -299,7 +304,10 @@ export default {
       if (val.inputValue.trim().length === 0) {
         val.inputValue = "";
         val.inputVisible = false;
+        return
       }
+      const flag =val.attr_vals.some(item => item === val.inputValue.trim())
+      if(flag) return this.$message.error('添加的属性已存在')
       val.attr_vals.push(val.inputValue);
       val.inputValue = "";
       val.inputVisible = false;
@@ -325,8 +333,8 @@ export default {
       });
     },
     removeInputVal(index, val) {
-      console.log(index,val);
-      
+      console.log(index, val);
+
       val.attr_vals.splice(index, 1);
       this.saveAttrVals(val);
     }
