@@ -32,3 +32,6 @@ body,
 .el-cascader-menu{
   height: 240px;
 }
+.input-new-tag{
+  width: 120px;
+}
