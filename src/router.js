@@ -9,6 +9,7 @@ import Roles from './components/power/roles.vue'
 import Categories from './components/goods/Categories.vue'
 import GoodsParams from './components/goods/GoodsParams.vue'
 import GoodList from './components/goods/GoodList.vue'
+import GoodAdd from './components/goods/GoodsAdd.vue'
 Vue.use(Router)
 
 const router = new Router({
@@ -26,7 +27,8 @@ const router = new Router({
         {path:'/roles',component:Roles},
         {path:'/categories',component:Categories},
         {path:'/params',component:GoodsParams},
-        {path:'/goods',component:GoodList}
+        {path:'/goods',component:GoodList},
+        {path:'/goods/add',component:GoodAdd}
 
       ]
     }

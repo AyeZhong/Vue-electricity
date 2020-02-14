@@ -29,9 +29,18 @@ body,
   height: 400px;
   overflow-y: scroll;
 }
-.el-cascader-menu{
+/* .el-cascader-menu{
   height: 240px;
-}
+} */
 .input-new-tag{
   width: 120px;
+}
+.el-steps{
+  margin: 10px;
+}
+.el-steps_title{
+  font-size: 17px;
+}
+.el-checkbox{
+  margin-right:20px;
 }

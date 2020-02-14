@@ -228,14 +228,14 @@ export default {
           params: { sel: this.activeName }
         }
       );
-      console.log(res);
+      // console.log(res); 
       res.data.forEach(item => {
         item.attr_vals = item.attr_vals ? item.attr_vals.split(" ") : [];
-        console.log(item.attr_vals);
+        // console.log(item.attr_vals);
         item.inputValue = "";
         item.inputVisible = false;
       });
-      console.log(res.data);
+      // console.log(res.data);
       if (res.meta.status !== 200) return this.$message.error("获取失败");
       if (this.activeName === "many") {
         this.manyParams = res.data;
@@ -281,10 +281,11 @@ export default {
           `categories/${this.cateId}/attributes/${this.editParamsForm.attr_id}`,
           {
             attr_name: this.editParamsForm.attr_name,
-            attr_sel: this.activeName
+            attr_sel: this.activeName,
+            attr_vals:this.editParamsForm.attr_vals
           }
         );
-        console.log(res);
+        // console.log(res);
 
         if (res.meta.status !== 200) return this.$message.error("添加失败");
         this.$message.success("添加成功");
@@ -294,7 +295,7 @@ export default {
     },
     async showEditparams(val) {
       this.editParamsVisible = true;
-      console.log(val);
+      // console.log(val);
       const { data: res } = await this.$http.get(
         `categories/${this.cateId}/attributes/${val}`
       );
@@ -333,7 +334,7 @@ export default {
       });
     },
     removeInputVal(index, val) {
-      console.log(index, val);
+      // console.log(index, val);
 
       val.attr_vals.splice(index, 1);
       this.saveAttrVals(val);

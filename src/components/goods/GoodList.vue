@@ -15,7 +15,7 @@
           </el-input>
         </el-col>
         <el-col :span="5">
-          <el-button type="primary">添加商品</el-button>
+          <el-button type="primary" @click="toGoodsAdd">添加商品</el-button>
         </el-col>
       </el-row>
       <el-table :data="GoodsList" border>
@@ -58,7 +58,7 @@ export default {
       queryInfo: {
         query: "",
         pagenum: 1,
-        pagesize: 5
+        pagesize: 10
       },
       total:0,
       GoodsList: []
@@ -84,13 +84,13 @@ export default {
     },
     handleSizeChange(val){
         this.queryInfo.pagesize=val
-        console.log(this.queryInfo);
+        // console.log(this.queryInfo);
         this.getGoodsList()
         
     },
     handleCurrentChange(val){
         this.queryInfo.pagenum=val
-        console.log(this.queryInfo);
+        // console.log(this.queryInfo);
         
         this.getGoodsList()
     },
@@ -108,6 +108,9 @@ export default {
         }).catch(() => {
             this.$message('取消操作')
         });
+    },
+    toGoodsAdd(){
+      this.$router.push('goods/add')
     }
     // 显示添加对话框
     // showAddGoodsVisible(){
